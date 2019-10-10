@@ -13,59 +13,70 @@ Syntax Checker
 SyntaxChecker::SyntaxChecker(string fileName)
 {
 	//intialize the stacks
-	symbolStack = GenStack<char>();
-	lineNumStack = GenStack<int>();
-
-	ReadFile(fileName);
-
+	symbolStack = new  GenStack<char>();
+	lineNumStack = new GenStack<int>();
+	lineCount = 0;
+	this->fileName = fileName;
+	lineStack = new GenStack<string>();
+	ReadFile(fileName);//need to change this
+	GetSymbols();
 
 }
 
 //destruct
 SyntaxChecker::~SyntaxChecker()
 {
-	symbolStack.~GenStack();
-	lineNumStack.~GenStack();
+	symbolStack->~GenStack();
+	lineNumStack->~GenStack();
+	lineStack->~GenStack();
 }
 
-//read the file and enter all the symbols into the stacks
+//read the file and put each line into the stack called lineStack
 void SyntaxChecker::ReadFile(string fileName)
 {
-	ifstream inputFile;
-	inputFile.open(fileName);
-	//make sure its open
-	if (!inputFile)
-		throw runtime_error("Could not open file named " + fileName + ".");
+	ifstream file;
+	file.open(fileName);
 
-	//now move through the file 
-	string line = "";
-	int lineCounter = 0;
-	//iterate through every line
-	while (getline(inputFile, line))
+	if (!file.is_open())
 	{
-		//iterate through the line gathering what symbol and the line number
-		for (int i = 0; i < line.length(); ++i)
-		{
-			//record the symbol and its line number
-			if (line[i] == '(' || line[i] == ')')
-			{
-				symbolStack.push(line[i]);
-				lineNumStack.push(lineCounter);
-			}
-			else if (line[i] == '{' || line[i] == '}')
-			{
-				symbolStack.push(line[i]);
-				lineNumStack.push(lineCounter);
-			}
-			else if (line[i] == '[' || line[i] == ']')
-			{
-				symbolStack.push(line[i]);
-				lineNumStack.push(lineCounter);
-			}		
-		}
-		lineCounter++;
+		throw runtime_error("The file could not be opened.");
+	}
+
+	string line = "";
+	//counts the line number and puts each line into a stack
+	while (getline(file, line))
+	{
+		cout << "Line number: " << lineCount << "| Line: " << line << endl;
+		lineCount++;
+		lineStack->push(line);
 	}
 }
+
+//now go through the line array gathering every symbol and line number
+//into the symbolStack and lineNumStacks
+void SyntaxChecker::GetSymbols()
+{
+	cout << "Total line count: " << lineCount << endl;
+	string line = "";
+	//iterate through every line
+	for (int i = 1; i <= lineCount; ++i)
+	{
+		line = lineStack->pop();
+		
+		//cout << "Line number: " << i << " | line: " << line << endl;
+
+		//iterate through each character
+		for (int num = 0; num < line.length(); ++num)
+		{
+			if (line[num] == '(' || line[num] == ')' || line[num] == '{' || line[num] == '}' || line[num] == '[' || line[num] == ']')
+			{
+				symbolStack->push(line[num]);
+				lineNumStack->push(i);
+			}
+		}
+	}
+}
+
 
 string SyntaxChecker::GetString()
 {

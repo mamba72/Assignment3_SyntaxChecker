@@ -5,11 +5,12 @@ Assignment 3
 Data Structures
 Syntax Checker
 */
-#include "GenStack.h"
+//#include "GenStack.h"
 
-using namespace std;
+//using namespace std;
 
 //the default constructor
+/*
 template <typename T>
 GenStack<T>::GenStack()
 {
@@ -92,3 +93,4 @@ void GenStack<T>::resizeArray()
 //because the compiler needs to be given examples
 template class GenStack<char>;
 template class GenStack<int>;
+*/

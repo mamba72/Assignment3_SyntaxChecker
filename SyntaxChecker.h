@@ -18,11 +18,17 @@ public:
 
 	//functions
 	void ReadFile(string fileName);
+	void GetSymbols();
 	string GetString();
 
 
 	//member variables
-	GenStack<char> symbolStack;
-	GenStack<int> lineNumStack;
+	GenStack<char>* symbolStack;
+	GenStack<int>* lineNumStack;
+
+	//file member vars
+	GenStack<string>* lineStack;
+	int lineCount;
+	string fileName;
 
 };
