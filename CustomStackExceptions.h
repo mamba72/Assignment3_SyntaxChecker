@@ -10,12 +10,12 @@ Syntax Checker
 
 using namespace std;
 
-//exception to tell whether the file could be opened
-class CouldNotOpenFileException : public std::exception
+//exception to tell whether the stack is empty
+class StackEmptyException : public std::exception
 {
 	const char* msg;
 public:
-	CouldNotOpenFileException(const char* msg) : std::exception()
+	StackEmptyException(const char* msg) : std::exception()
 	{
 		this->msg = msg;
 	}

@@ -26,40 +26,36 @@ int main(int argc, char** argv)
 
 	while (stay == 'y')
 	{
-		//SyntaxChecker sc("TestCPP");
-		SyntaxChecker sc(fileName);
+		SyntaxChecker* sc;
 
-		cout << endl << endl;
-
-		//cout << "SC Peak: " << sc.lineStack->peek() << endl;
-		cout << "Num elements of symbolStack: " << sc.delimiterStack->top << endl;
-
-		cout << "Last delimiter: " << sc.delimiterStack->peek()->GetString() << endl;
-
-		int delimiterNumberCounter = 0;
-		for (int i = sc.delimiterStack->top; i >= 0; --i)
+		try 
 		{
-			cout << "Delimiter Number: " << delimiterNumberCounter << "\t" << sc.delimiterStack->myArray[i]->GetString();
-			delimiterNumberCounter++;
+			sc = new SyntaxChecker(fileName);
+		}
+		catch (CouldNotOpenFileException e)
+		{
+			cout << "Your file named " + fileName + " couldn't be opened." << endl;
+			cout << "Your exception output:\n" << e.what() << endl;
+			return 1;
 		}
 
-		cout << "NumOpenParens: " << to_string(sc.numOpenParens) << endl;
-		cout << "NumCloseParens: " << to_string(sc.numCloseParens) << endl;
-		cout << "NumOpenBrackets: " << to_string(sc.numOpenBrackets) << endl;
-		cout << "NumCloseBrackets: " << to_string(sc.numCloseBrackets) << endl;
-		cout << "NumOpenCurlyBrackets: " << to_string(sc.numOpenCurlyBrackets) << endl;
-		cout << "NumCloseCurlyBrackets: " << to_string(sc.numCloseCurlyBrackets) << endl;
+		int delimiterNumberCounter = 0;
+		for (int i = sc->delimiterStack->top; i >= 0; --i)
+		{
+			//cout << "Delimiter Number: " << delimiterNumberCounter << "\t" << sc.delimiterStack->myArray[i]->GetString();
+			delimiterNumberCounter++;
+		}
 		
-		SyntaxChecker::ProblemReport report = sc.FindPairs();
+		SyntaxChecker::ProblemReport report = sc->FindPairs();
 
 		cout << report.toString() << endl;
 
 		//ask the user if they want to stay
-		cout << "\n\nWould you like to do another file? (y/n)\n";
+		cout << "\nWould you like to do another file? (y/n)\n";
 		cin >> stay;
 
 		//only do this when you're sure you're done with the file
-		sc.ReadyForNextFile();
+		sc->ReadyForNextFile();
 
 		if (stay == 'y')
 		{

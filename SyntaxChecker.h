@@ -8,6 +8,7 @@ Syntax Checker
 #include <iostream>
 #include "GenStack.h"
 #include "Delimiter.h"
+#include "CustomExceptions.h"
 using namespace std;
 
 class SyntaxChecker
@@ -41,8 +42,6 @@ public:
 	//functions
 	void ReadFile(string fileName);
 	void GetSymbols();
-	//string GetString();
-	void CountPairs(Delimiter* &d);
 	ProblemReport FindPairs();
 	void ReadyForNextFile();
 
@@ -54,14 +53,6 @@ public:
 	GenStack<string>* lineStack;
 	int lineCount;
 	string fileName;
-
-	//file statistics member vars
-	unsigned int numOpenParens = 0;
-	unsigned int numCloseParens = 0;
-	unsigned int numOpenBrackets = 0;
-	unsigned int numCloseBrackets = 0;
-	unsigned int numOpenCurlyBrackets = 0;
-	unsigned int numCloseCurlyBrackets = 0;
 
 	
 

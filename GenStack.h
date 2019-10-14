@@ -6,7 +6,7 @@ Data Structures
 Syntax Checker
 */
 #include <iostream>
-#include "CustomExceptions.h"
+#include "CustomStackExceptions.h"
 using namespace std;
 
 template <class T> 
@@ -48,10 +48,9 @@ public:
 		}
 		else
 		{
-			cout << "Resizing array. Size = " << size << " Top = " << top << endl;
 			resizeArray();
 
-			//push(d);
+			//push(d);//could do recursion, but that would make it more complex and harder to debug
 			myArray[++top] = d;
 		}
 	}
