@@ -2,12 +2,21 @@
 
 using namespace std;
 
-
+{
 //the length of the stack
 int size();
 int pop();
 void push(int object);
 
+
+if(5 + to_int(ten))
+{
+
+}
+
 //t is the last index that has an element of the array thats being used 
 int t = 0;
-int S[10];
+int S10];
+
+
+}

@@ -36,9 +36,11 @@ int main(int argc, char** argv)
 
 		cout << "Last delimiter: " << sc.delimiterStack->peek()->GetString() << endl;
 
-		for (int i = 0; i < sc.delimiterStack->top + 1; ++i)
+		int delimiterNumberCounter = 0;
+		for (int i = sc.delimiterStack->top; i >= 0; --i)
 		{
-			cout << "Delimiter Number: " << i << "\t" << sc.delimiterStack->myArray[i]->GetString();
+			cout << "Delimiter Number: " << delimiterNumberCounter << "\t" << sc.delimiterStack->myArray[i]->GetString();
+			delimiterNumberCounter++;
 		}
 
 		cout << "NumOpenParens: " << to_string(sc.numOpenParens) << endl;
@@ -47,9 +49,10 @@ int main(int argc, char** argv)
 		cout << "NumCloseBrackets: " << to_string(sc.numCloseBrackets) << endl;
 		cout << "NumOpenCurlyBrackets: " << to_string(sc.numOpenCurlyBrackets) << endl;
 		cout << "NumCloseCurlyBrackets: " << to_string(sc.numCloseCurlyBrackets) << endl;
-
-
 		
+		SyntaxChecker::ProblemReport report = sc.FindPairs();
+
+		cout << report.toString() << endl;
 
 		//ask the user if they want to stay
 		cout << "\n\nWould you like to do another file? (y/n)\n";

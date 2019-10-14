@@ -13,6 +13,28 @@ using namespace std;
 class SyntaxChecker
 {
 public:
+	//this is used to contain the information about the syntax problem
+	struct ProblemReport
+	{
+		bool isProblem;
+		string problemDescription = "";
+		int lineNum = -1;
+
+		string toString()
+		{
+			if (isProblem)
+				return problemDescription;
+			else
+				return "There were no problems.";
+		}
+	};
+
+	ProblemReport CreateReport(bool problem, string description, int line)
+	{
+		return { problem, description, line };
+	}
+
+
 	SyntaxChecker(string fileName);
 	~SyntaxChecker();
 
@@ -26,8 +48,6 @@ public:
 
 
 	//member variables
-	//GenStack<char>* symbolStack;
-	//GenStack<int>* lineNumStack;
 	GenStack<Delimiter*>* delimiterStack;
 
 	//file member vars
@@ -43,12 +63,6 @@ public:
 	unsigned int numOpenCurlyBrackets = 0;
 	unsigned int numCloseCurlyBrackets = 0;
 
-};
+	
 
-//this is used to contain the information about the syntax problem
-struct ProblemReport
-{
-	bool isProblem;
-	string problemDescription = "";
-	int lineNum = -1;
 };

@@ -14,18 +14,22 @@ Delimiter::Delimiter(int lineNum, char symbol)
 	this->lineNum = lineNum;
 	this->symbol = symbol;
 	hasPair = false;
+	DeterminePairType();
 }
-
-/*
-Delimiter::Delimiter()
-{
-	lineNum = -1;
-	symbol = '\0';
-	hasPair = false;
-}*/
 
 string Delimiter::GetString()
 {
-	string outputString = "Line number: " + to_string(lineNum) + "\tSymbol: " + symbol + "\n";
+	string outputString = "Line number: " + to_string(lineNum) + "\tSymbol: " + symbol + "\tHas Pair: "+ to_string(hasPair) + "\n";
 	return outputString;
+}
+
+//this will return the closing of that symbol
+void Delimiter::DeterminePairType()
+{
+	if (symbol == '(')
+		closeSymbol = ')';
+	else if (symbol == '{')
+		closeSymbol = '}';
+	else if (symbol == '[')
+		closeSymbol = ']';
 }

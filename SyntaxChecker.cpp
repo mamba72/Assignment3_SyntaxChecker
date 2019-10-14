@@ -8,6 +8,7 @@ Syntax Checker
 
 #include "SyntaxChecker.h"
 #include <fstream>
+#include <string>
 
 //constructor
 SyntaxChecker::SyntaxChecker(string fileName)
@@ -48,7 +49,7 @@ void SyntaxChecker::ReadFile(string fileName)
 	//counts the line number and puts each line into a stack
 	while (getline(file, line))
 	{
-		cout << "Line number: " << lineCount << "| Line: " << line << endl;
+		//cout << "Line number: " << lineCount << "| Line: " << line << endl;
 		lineCount++;
 		lineStack->push(line);
 	}
@@ -58,20 +59,19 @@ void SyntaxChecker::ReadFile(string fileName)
 //into the symbolStack and lineNumStacks
 void SyntaxChecker::GetSymbols()
 {
-	cout << "Total line count: " << lineCount << endl;
+	//cout << "Total line count: " << lineCount << endl;
 	string line = "";
 	//iterate through every line
 	for (int i = lineCount; i > 0; --i)
 	{
 		line = lineStack->pop();
 		
-		//cout << "Line number: " << i << " | line: " << line << endl;
 		bool quotePair = true;
 		//iterate through each character
-		for (int num = 0; num < line.length(); ++num)
+		for (int num = line.length() -1; num >= 0; --num)
 		{
 			//skip delimiters in strings
-			if (line[num] == '\"' || line[num] == '\"')
+			if (line[num] == '\"' || line[num] == '\'')
 			{
 				if (quotePair == false)
 					quotePair = true;
@@ -81,41 +81,43 @@ void SyntaxChecker::GetSymbols()
 			if (quotePair == false)
 				continue;
 			//end skipping delimiters in strings
+
+			//add the delimiters to the stack
 			if (line[num] == '(')
 			{
 				//symbolStack->push(line[num]);
 				//lineNumStack->push(i);
-				Delimiter* d = new Delimiter(i, ')');
+				Delimiter* d = new Delimiter(i, '(');
 				delimiterStack->push(d);
 				CountPairs(d);
 			}
 			else if (line[num] == ')')
 			{
-				Delimiter* d = new Delimiter(i, '(');
+				Delimiter* d = new Delimiter(i, ')');
 				delimiterStack->push(d);
 				CountPairs(d);
 			}
 			else if (line[num] == '{')
 			{
-				Delimiter* d = new Delimiter(i, '}');
+				Delimiter* d = new Delimiter(i, '{');
 				delimiterStack->push(d);
 				CountPairs(d);
 			}
 			else if (line[num] == '}')
 			{
-				Delimiter* d = new Delimiter(i, '{');
+				Delimiter* d = new Delimiter(i, '}');
 				delimiterStack->push(d);
 				CountPairs(d);
 			}
 			else if (line[num] == '[')
 			{
-				Delimiter* d = new Delimiter(i, ']');
+				Delimiter* d = new Delimiter(i, '[');
 				delimiterStack->push(d);
 				CountPairs(d);
 			}
 			else if (line[num] == ']')
 			{
-				Delimiter* d = new Delimiter(i, '[');
+				Delimiter* d = new Delimiter(i, ']');
 				delimiterStack->push(d);
 				CountPairs(d);
 			}
@@ -143,16 +145,69 @@ void SyntaxChecker::CountPairs(Delimiter* &d)
 }
 
 //this function will return whether there is a problem, the string about it, and the line thats the issue
-ProblemReport SyntaxChecker::FindPairs()
+SyntaxChecker::ProblemReport SyntaxChecker::FindPairs()
 {
-	//not sure what to do with the counts
+	ProblemReport report = CreateReport(false, "", -1);
 
 	//go through the stack checking if you find any close delimiters before an open
-	for (int i = 0; i <= delimiterStack->top; ++i)
+	while (delimiterStack->isEmpty() == false)
 	{
+		int openCounter = 0;
 
+		Delimiter* curDelim = delimiterStack->pop();
+		//cout << "Before " << curDelim->GetString();
+		if (curDelim->hasPair == false)
+		{
+			//if it is unpaired and a close, then it shouldnt be there
+			if (curDelim->symbol == ')' || curDelim->symbol == '}' || curDelim->symbol == ']')
+			{
+				report.isProblem = true;
+				report.problemDescription = ("Unexpected " + string(1, curDelim->symbol) + " on line " + to_string(curDelim->lineNum));
+				report.lineNum = curDelim->lineNum;
+				return report;
+			}
+			else
+			{
+				//iterate through the rest of the stack
+				for (int i = delimiterStack->top; i >= 0; --i)
+				{
+					//if this delimiter is the closing symbol of the current delimiter, then it is a pair
+					if (curDelim->symbol == delimiterStack->myArray[i]->symbol)
+					{
+						openCounter++;
+						continue;
+					}
+					else if (curDelim->closeSymbol == delimiterStack->myArray[i]->symbol && openCounter > 0)
+					{
+						openCounter--;
+						continue;
+					}
+					//if the counter is greater than zero, skip
+					if (openCounter > 0)
+					{
+						continue;
+					}
+
+					if (delimiterStack->myArray[i]->symbol == curDelim->closeSymbol)
+					{
+						curDelim->hasPair = true;
+						delimiterStack->myArray[i]->hasPair = true;
+						break;
+					}
+				}
+			}
+		}
+		//cout << "After " << curDelim->GetString();
+		//this should check to see if there is an open delim without a pairing close delim
+		if (curDelim->hasPair == false)
+		{
+			report.isProblem = true;
+			report.problemDescription = "Unpaired " + string(1, curDelim->symbol) + " on line " + to_string(curDelim->lineNum);
+			report.lineNum = curDelim->lineNum;
+			return report;
+		}
 	}
-
+	return report;
 }
 
 void SyntaxChecker::ReadyForNextFile()
@@ -164,6 +219,6 @@ void SyntaxChecker::ReadyForNextFile()
 	numOpenCurlyBrackets = 0;
 	numCloseCurlyBrackets = 0;
 
-	lineStack->~GenStack();
-	delimiterStack->~GenStack();
+	//lineStack->~GenStack();
+	//delimiterStack->~GenStack();
 }

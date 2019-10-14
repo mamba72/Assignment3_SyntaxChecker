@@ -9,7 +9,7 @@ Syntax Checker
 #include "CustomExceptions.h"
 using namespace std;
 
-template <class T>
+template <class T> 
 class GenStack 
 {
 public:
