@@ -25,3 +25,19 @@ public:
 		return msg;
 	}
 };
+
+//exception to tell whether the file has any content
+class FileIsEmptyException : public std::exception
+{
+	const char* msg;
+public:
+	FileIsEmptyException(const char* msg) : std::exception()
+	{
+		this->msg = msg;
+	}
+
+	const char* what() const throw ()
+	{
+		return msg;
+	}
+};

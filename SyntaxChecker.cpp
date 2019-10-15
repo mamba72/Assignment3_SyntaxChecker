@@ -5,7 +5,7 @@ Assignment 3
 Data Structures
 Syntax Checker
 */
-
+ 
 #include "SyntaxChecker.h"
 #include <fstream>
 #include <string>
@@ -47,13 +47,19 @@ void SyntaxChecker::ReadFile(string fileName)
 		lineCount++;
 		lineStack->push(line);
 	}
+
+	if (lineCount == 0)
+	{
+		throw FileIsEmptyException("The file is empty.");
+	}
+
+	file.close();
 }
 
 //now go through the line array gathering every symbol and line number
 //into the symbolStack and lineNumStacks
 void SyntaxChecker::GetSymbols()
 {
-	//cout << "Total line count: " << lineCount << endl;
 	string line = "";
 	//iterate through every line
 	//go backwards through the line count because the first line popped is the last one read.
@@ -177,11 +183,4 @@ SyntaxChecker::ProblemReport SyntaxChecker::FindPairs()
 		}
 	}
 	return report;
-}
-
-void SyntaxChecker::ReadyForNextFile()
-{
-	//lineStack->~GenStack();
-	//delimiterStack->~GenStack();
-	//these create problems
 }

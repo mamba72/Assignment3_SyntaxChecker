@@ -14,7 +14,12 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	if (argc != 2)
+	if (argc > 2)
+	{
+		cout << "There can only be two command line arguments: the inital command and the file name.\n";
+		return 1;
+	}
+	else if (argc != 2)
 	{
 		cout << "You did not enter a file in the command line arguments.\n";
 		return 1;
@@ -30,6 +35,7 @@ int main(int argc, char** argv)
 
 		try 
 		{
+			//create the object. this will read the file and gather delimiters automatically
 			sc = new SyntaxChecker(fileName);
 		}
 		catch (CouldNotOpenFileException e)
@@ -38,14 +44,14 @@ int main(int argc, char** argv)
 			cout << "Your exception output:\n" << e.what() << endl;
 			return 1;
 		}
-
-		int delimiterNumberCounter = 0;
-		for (int i = sc->delimiterStack->top; i >= 0; --i)
+		catch (FileIsEmptyException e)
 		{
-			//cout << "Delimiter Number: " << delimiterNumberCounter << "\t" << sc.delimiterStack->myArray[i]->GetString();
-			delimiterNumberCounter++;
+			cout << "The file you entered by the name of " + fileName + " is empty.\nTry a different file that has content.\n";
+			cout << "Your Exception report:\n\t" << e.what() << endl;
+			return 1;
 		}
 		
+		//grab the problem report from the function
 		SyntaxChecker::ProblemReport report = sc->FindPairs();
 
 		cout << report.toString() << endl;
@@ -53,9 +59,6 @@ int main(int argc, char** argv)
 		//ask the user if they want to stay
 		cout << "\nWould you like to do another file? (y/n)\n";
 		cin >> stay;
-
-		//only do this when you're sure you're done with the file
-		sc->ReadyForNextFile();
 
 		if (stay == 'y')
 		{
@@ -68,8 +71,5 @@ int main(int argc, char** argv)
 
 	cout << "Goodbye :)\n";
 
-
-	
-
-
+	return 0;
 }

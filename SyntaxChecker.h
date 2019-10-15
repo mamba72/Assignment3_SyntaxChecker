@@ -43,7 +43,6 @@ public:
 	void ReadFile(string fileName);
 	void GetSymbols();
 	ProblemReport FindPairs();
-	void ReadyForNextFile();
 
 
 	//member variables

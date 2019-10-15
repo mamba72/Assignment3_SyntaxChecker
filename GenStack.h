@@ -104,7 +104,7 @@ private:
 
 		//delete[] myArray;//creates memory errors
 		myArray = tempArray;
-		//delete[] tempArray;
+
 		//update the size
 		this->size = this->size * 2;
 	}
